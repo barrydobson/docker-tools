@@ -1,0 +1,22 @@
+version: '3.6'
+services:
+  builder:
+    image: ${IMMUTABLE_IMAGE_NAME}
+    build:
+      context: .
+      target: ${target}
+      labels:
+        maintainer: "Barry Dobson"
+        tn.kubernetes.docker.dockerfile: "docker-images/${IMAGE_NAME_ONLY}/Dockerfile"
+        tn.kubernetes.license: "MIT"
+        tn.kubernetes.name: "barrydobson/${IMAGE_NAME_ONLY}"
+        tn.kubernetes.vcs-type: Git
+        tn.kubernetes.url: "https://github.com/barrydobson/docker-tools"
+        tn.kubernetes.vcs-url: "https://github.com/barrydobson/docker-tools.git"
+        tn.kubernetes.build-date: ${BUILD_DATE}
+        tn.kubernetes.version: ${IMMUTABLE_IMAGE_NAME}
+        tn.kubernetes.vcs-ref: ${SOURCE_COMMIT}
+      args:
+        AWS_CLI_VERSION: ${AWS_CLI_VERSION}
+        EKSCTL_VERSION: ${EKSCTL_VERSION}
+        KUBECTL_VERSION: ${KUBECTL_VERSION}

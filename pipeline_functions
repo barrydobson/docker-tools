@@ -1,0 +1,25 @@
+#!/usr/bin/env sh
+# # https://github.com/docker/hub-feedback/issues/508#issuecomment-240616319
+# Usage :
+#   $0 <dockerfile-target> <final-image-tag>
+#
+# must be imported from inside eachy ./<image-folder>/hook/build script
+export $(cat ../../.env | xargs)
+cp ../../docker-compose.yaml .
+cp ../../.env .
+
+build_function()
+{
+  echo "------ HOOK START - BUILD -------"
+  export BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` target=$1 IMMUTABLE_TAG=$2
+  export IMMUTABLE_IMAGE_NAME=${DOCKER_REPO}:${IMMUTABLE_TAG}
+  echo '--- Env vars just before building'
+  printenv
+  docker-compose build builder;
+  # release
+  docker tag ${IMMUTABLE_IMAGE_NAME} ${IMAGE_NAME}
+
+  echo "---publish immutable artifact ----"
+  docker push ${IMMUTABLE_IMAGE_NAME}
+  echo "------ HOOK END - BUILD -------"
+}
